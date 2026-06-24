@@ -1,0 +1,24 @@
+# secrets / credentials
+.env
+.env.*
+*service-account*.json
+*service_account*.json
+credentials*.json
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# generated artifacts
+blockmap*.json
+*.xlsx
+
+# OS
+Thumbs.db
+.DS_Store
+
+# editor / harness local config
+.claude/
