@@ -1,0 +1,55 @@
+name: Run overall summary
+
+# Запуск в облаке GitHub — работает даже когда твой компьютер выключен.
+on:
+  workflow_dispatch:        # ручной запуск кнопкой во вкладке Actions
+    inputs:
+      spreadsheet_id:
+        description: "ID Google-таблицы"
+        required: true
+        default: "1KVOZZ_Ek_GAy8nNnqp2-R5XZbWYY0hhRPYLTMd-0Iyk"
+      work_rows:
+        description: "Строки дат (30 дней = 4:33, 28 = 4:31, 31 = 4:34)"
+        required: true
+        default: "4:33"
+      apply:
+        description: "Реально записать формулы? (false = сухой прогон)"
+        required: true
+        default: "false"
+  # Расписание (UTC). Пример: каждый день в 06:00 UTC. Раскомментируй при необходимости.
+  # schedule:
+  #   - cron: "0 6 * * *"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Write service account key from secret
+        env:
+          SA_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON_CONTENT }}
+        run: |
+          printf '%s' "$SA_JSON" > "$RUNNER_TEMP/sa.json"
+
+      - name: Run
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ runner.temp }}/sa.json
+          PYTHONIOENCODING: "utf-8"
+          SPREADSHEET_ID: ${{ github.event.inputs.spreadsheet_id || '1KVOZZ_Ek_GAy8nNnqp2-R5XZbWYY0hhRPYLTMd-0Iyk' }}
+          WORK_ROWS: ${{ github.event.inputs.work_rows || '4:33' }}
+          DO_APPLY: ${{ github.event.inputs.apply || 'false' }}
+        run: |
+          FLAG="--dry_run"
+          if [ "$DO_APPLY" = "true" ]; then FLAG="--apply"; fi
+          python app/overall_summary_autodiscovery.py \
+            --spreadsheet_id "$SPREADSHEET_ID" \
+            --work_rows "$WORK_ROWS" \
+            $FLAG

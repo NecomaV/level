@@ -4,6 +4,8 @@
 *service-account*.json
 *service_account*.json
 credentials*.json
+*-agent-*.json
+level-a-agent-*.json
 
 # python
 __pycache__/

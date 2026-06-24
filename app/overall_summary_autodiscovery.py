@@ -294,6 +294,11 @@ SALES_TOKENS = {
 
 COLD_TOKENS = {"холодная", "холодная база", "cold numbers", "cold"}
 
+# Блоки, которые нужно полностью исключать из сводки по заголовку блока
+# (не учитываются ни в одной метрике).
+#   "dubai target" — на листе "Сводка CocoAge": лиды без бюджета, в общую сводку не идёт.
+EXCLUDE_BLOCK_TITLE_TOKENS = {"dubai target"}
+
 _WORD = r"a-z0-9а-я"
 
 
@@ -489,6 +494,9 @@ def discover_sheet_from_grid(
         title = titles[i] if i < len(titles) else ""
         if _contains_any(title, COLD_TOKENS):
             excluded.append({"start_col": abs_col(i), "title": title, "reason": "cold_block_excluded"})
+            continue
+        if _contains_any(title, EXCLUDE_BLOCK_TITLE_TOKENS):
+            excluded.append({"start_col": abs_col(i), "title": title, "reason": "excluded_by_title"})
             continue
         if i + 6 >= len(hdr):
             continue
@@ -741,11 +749,11 @@ LABEL_TO_SVODKA_RAW: Dict[str, str] = {
     "Айви Астана Фэшн": "Сводка Айви Астана Фэшн",
     "Филиал Нейротек": "Сводка Нейротек",
     "Vitally Life Астана": "Сводка Vitally Life Астана",
-    "Vitally Life Алматы Рамзан": "Сводка Vitally Life Алматы Рамз",
+    "Vitally Life Алматы Рамзан": "Сводка Vitally Life Алматы Рамзан",
     # ---- Франшизы ----
-    "Франшиза VitalyLife Алматы": "Сводка Vitally Life Алматы Вади",
+    "Франшиза VitalyLife Алматы": "Сводка Vitally Life Алматы Вадим",
     "Франшиза VitalyLife Актау": "Сводка Vitally Life Актау",
-    "Франшиза Vitally Life Усть-Каменогорск": "Сводка Vitally Life Усть-Камено",
+    "Франшиза Vitally Life Усть-Каменогорск": "Сводка Vitally Life Усть-Каменогорск",
 }
 
 LABEL_TO_SVODKA: Dict[str, str] = {_norm_label_key(k): v for k, v in LABEL_TO_SVODKA_RAW.items()}
