@@ -735,6 +735,7 @@ def _derived_formulas(row: int) -> Dict[str, str]:
 #     Франшиза VitalyLife Алматы
 #     Франшиза VitalyLife Актау
 #     Франшиза Vitally Life Усть-Каменогорск
+#     Франшиза Темиртау
 LABEL_TO_SVODKA_RAW: Dict[str, str] = {
     # ---- Филиалы ----
     "Филиал Кедма Астана": "Сводка Кедма Астана",
@@ -754,6 +755,7 @@ LABEL_TO_SVODKA_RAW: Dict[str, str] = {
     "Франшиза VitalyLife Алматы": "Сводка Vitally Life Алматы Вадим",
     "Франшиза VitalyLife Актау": "Сводка Vitally Life Актау",
     "Франшиза Vitally Life Усть-Каменогорск": "Сводка Vitally Life Усть-Каменогорск",
+    "Франшиза Темиртау": "Сводка Темиртау",
 }
 
 LABEL_TO_SVODKA: Dict[str, str] = {_norm_label_key(k): v for k, v in LABEL_TO_SVODKA_RAW.items()}
