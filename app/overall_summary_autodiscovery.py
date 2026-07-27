@@ -235,6 +235,18 @@ def _norm_h(x: Any) -> str:
     return _norm_base(_s(x))
 
 
+def _norm_sheet_name(x: Any) -> str:
+    """Ключ для сравнения имён листов без учёта различий в пробелах.
+
+    Схлопывает любые последовательности пробельных символов (включая
+    неразрывный пробел) в один пробел и убирает крайние. Регистр и слова
+    сохраняются — совпадать должны именно названия вкладок, отличающиеся
+    только количеством пробелов (напр. "Сводка  X" vs "Сводка X").
+    """
+    s = _s(x).replace(" ", " ")
+    return re.sub(r"\s+", " ", s).strip()
+
+
 def _clean_label(x: Any) -> str:
     return _s(x).replace(" ", " ").strip()
 
@@ -772,8 +784,12 @@ PAYERS_KIND_BY_SHEET = {
 }
 
 
+# нормализованный по пробелам вид PAYERS_KIND_BY_SHEET (устойчив к single/double space)
+_PAYERS_KIND_BY_SHEET_NORM = {_norm_sheet_name(k): v for k, v in PAYERS_KIND_BY_SHEET.items()}
+
+
 def _infer_branch_kind_by_sheet(sheet_name: str) -> str:
-    return PAYERS_KIND_BY_SHEET.get(sheet_name, "kz")
+    return _PAYERS_KIND_BY_SHEET_NORM.get(_norm_sheet_name(sheet_name), "kz")
 
 
 # =========================
@@ -803,6 +819,17 @@ def generate_patch(
     service = _get_service()
     props = _get_sheets_properties(service, spreadsheet_id)
 
+    # индекс реальных названий вкладок по нормализованному (пробел-независимому) ключу,
+    # чтобы имя из маппинга совпадало с вкладкой даже при разнице в пробелах
+    props_by_norm: Dict[str, str] = {}
+    for _title in props:
+        props_by_norm.setdefault(_norm_sheet_name(_title), _title)
+
+    def _resolve_sheet(name: str) -> Optional[str]:
+        if name in props:
+            return name
+        return props_by_norm.get(_norm_sheet_name(name))
+
     scan_start, scan_end_req = parse_scan(scan)
 
     ranges: List[str] = []
@@ -812,10 +839,11 @@ def generate_patch(
     wanted_sheets = sorted(set(LABEL_TO_SVODKA.values()))
     HEADER_SCAN_ROWS = 30
     sheet_scan_range: Dict[str, str] = {}
-    for sh in wanted_sheets:
-        if sh not in props:
+    for want in wanted_sheets:
+        sh = _resolve_sheet(want)
+        if not sh:
             if verbose:
-                print(f"[WARN] sheet not found in spreadsheet: {sh}")
+                print(f"[WARN] sheet not found in spreadsheet: {want}")
             continue
         col_count = int(props[sh].get("colCount") or 0)
         if col_count <= 0:
@@ -871,10 +899,16 @@ def generate_patch(
         if _is_instagram_label(lab):
             continue
 
-        sh = LABEL_TO_SVODKA.get(key)
-        if not sh:
+        sh_mapped = LABEL_TO_SVODKA.get(key)
+        if not sh_mapped:
             if verbose:
                 print(f"[WARN] label not mapped (skip): '{lab}' (norm='{key}')")
+            continue
+
+        sh = _resolve_sheet(sh_mapped)
+        if not sh:
+            if verbose:
+                print(f"[WARN] sheet not found for label '{lab}': {sh_mapped}")
             continue
 
         if section_start is None:
