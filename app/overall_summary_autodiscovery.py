@@ -757,7 +757,7 @@ LABEL_TO_SVODKA_RAW: Dict[str, str] = {
     "Франшиза VitalyLife Актау": "Сводка Vitally Life Актау",
     "Франшиза Vitally Life Кокшетау": "Сводка Vitally Life Кокшетау",
     "Франшиза Темиртау": "Сводка Vitally Life Темиртау",
-    "Франшиза Proff Dental": "Сводка Стоматология Proff Dental",
+    "Франшиза Proff Dental": "Сводка  Стоматология Proff Dental",
 }
 
 LABEL_TO_SVODKA: Dict[str, str] = {_norm_label_key(k): v for k, v in LABEL_TO_SVODKA_RAW.items()}
@@ -766,7 +766,7 @@ LABEL_TO_SVODKA: Dict[str, str] = {_norm_label_key(k): v for k, v in LABEL_TO_SV
 PAYERS_KIND_BY_SHEET = {
     "Сводка Опатра Ташкент": "tashkent",
     "Сводка Опатра Ташкент Айви": "tashkent",
-    "Сводка Стоматология Proff Dental": "tashkent",
+    "Сводка  Стоматология Proff Dental": "tashkent",
     "Сводка CocoAge": "dubai",
     # остальные kz
 }
