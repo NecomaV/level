@@ -7,7 +7,7 @@ on:
       spreadsheet_id:
         description: "ID Google-таблицы"
         required: true
-        default: "1-UfRins_7pnKmb2S-_Khg2BkZ5zMP25VB2pirVuBzSU"
+        default: "1mz9HXyqfcXxq6BXWO_-rYrb7eZ4qLqjm15pWFbYJ4bg"
       work_rows:
         description: "Строки дат (30 дней = 4:33, 28 = 4:31, 31 = 4:34)"
         required: true
@@ -43,7 +43,7 @@ jobs:
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ runner.temp }}/sa.json
           PYTHONIOENCODING: "utf-8"
-          SPREADSHEET_ID: ${{ github.event.inputs.spreadsheet_id || '1-UfRins_7pnKmb2S-_Khg2BkZ5zMP25VB2pirVuBzSU' }}
+          SPREADSHEET_ID: ${{ github.event.inputs.spreadsheet_id || '1mz9HXyqfcXxq6BXWO_-rYrb7eZ4qLqjm15pWFbYJ4bg' }}
           WORK_ROWS: ${{ github.event.inputs.work_rows || '4:34' }}
           DO_APPLY: ${{ github.event.inputs.apply || 'false' }}
         run: |
