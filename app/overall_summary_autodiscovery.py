@@ -742,7 +742,7 @@ def _derived_formulas(row: int) -> Dict[str, str]:
 #     Айви Астана Фэшн
 #     Филиал Нейротек
 #     Vitally Life Астана
-#     Vitally Life Алматы Рамзан
+#     Vitally Life Алматы ФМ
 #   ТАБЛИЦА "Франшиза":
 #     Франшиза VitalyLife Алматы
 #     Франшиза VitalyLife Актау
@@ -763,7 +763,7 @@ LABEL_TO_SVODKA_RAW: Dict[str, str] = {
     "Айви Астана Фэшн": "Сводка Айви Астана Фэшн",
     "Филиал Нейротек": "Сводка Нейротек",
     "Vitally Life Астана": "Сводка Vitally Life Астана",
-    "Vitally Life Алматы Рамзан": "Сводка Vitally Life Алматы Рамзан",
+    "Vitally Life Алматы ФМ": "Сводка Vitally Life Алматы ФМ",
     # ---- Франшизы ----
     "Франшиза VitalyLife Алматы": "Сводка Vitally Life Алматы Вадим",
     "Франшиза VitalyLife Актау": "Сводка Vitally Life Актау",
