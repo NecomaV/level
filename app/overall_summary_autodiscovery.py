@@ -28,13 +28,15 @@ L  Продажи $
 
 ВАЛЮТА (важно):
   K (платники / возврат):
-    - kz       -> делим на $F$1 (KZT)   ТОЛЬКО когда $G$1="USD"
-    - tashkent -> делим на $H$1 (UZS)   ТОЛЬКО когда $G$1="USD"
-    - dubai    -> делим на $E$1 (AED)   всегда
+    - kz               -> делим на $F$1 (KZT)   ТОЛЬКО когда $G$1="USD"
+    - tashkent         -> делим на $H$1 (UZS)   ТОЛЬКО когда $G$1="USD"
+    - tashkent_som_sales -> делим на $H$1 (UZS) ТОЛЬКО когда $G$1="USD"
+    - dubai            -> делим на $E$1 (AED)   всегда
   L (продажи):
-    - kz       -> делим на $F$1 (KZT)   ТОЛЬКО когда $G$1="USD"
-    - tashkent -> НЕ делим (продажи уже в USD)
-    - dubai    -> делим на $E$1 (AED)   всегда
+    - kz               -> делим на $F$1 (KZT)   ТОЛЬКО когда $G$1="USD"
+    - tashkent         -> НЕ делим (продажи уже в USD)
+    - tashkent_som_sales -> делим на $H$1 (UZS) ТОЛЬКО когда $G$1="USD"  (продажи в сомах, напр. Proff Dental)
+    - dubai            -> делим на $E$1 (AED)   всегда
 
 СЕКЦИИ листа Overall (метки в B повторяются между секциями!):
   - "Филиал ..."  таблица    -> своя строка "Итог:"
@@ -591,11 +593,16 @@ def _kzt_toggle_divider() -> str:
     return f"ЕСЛИ({CURRENCY_TOGGLE}=\"USD\";{_safe_rate(KZT_RATE)};1)"
 
 
+def _tash_toggle_divider() -> str:
+    """UZS: делим (сом -> USD) только когда переключатель = USD."""
+    return f"ЕСЛИ({CURRENCY_TOGGLE}=\"USD\";{_safe_rate(TASH_RATE)};1)"
+
+
 def _payers_divider(branch_kind: str) -> str:
     if branch_kind == "dubai":
         return _safe_rate(DUBAI_RATE)
-    if branch_kind == "tashkent":
-        return f"ЕСЛИ({CURRENCY_TOGGLE}=\"USD\";{_safe_rate(TASH_RATE)};1)"
+    if branch_kind in ("tashkent", "tashkent_som_sales"):
+        return _tash_toggle_divider()
     return _kzt_toggle_divider()
 
 
@@ -603,9 +610,13 @@ def _sales_divider(branch_kind: str) -> str:
     # CocoAge: продажи в AED -> USD (делим на курс AED/USD) всегда
     if branch_kind == "dubai":
         return _safe_rate(DUBAI_RATE)
-    # Ташкент: продажи уже в USD -> НЕ делим
+    # Ташкент (обычный): продажи уже в USD -> НЕ делим
     if branch_kind == "tashkent":
         return "1"
+    # Ташкент со сомовыми продажами (Proff Dental): продажи в сомах -> USD,
+    # делим на курс UZS только когда переключатель = USD (как платников)
+    if branch_kind == "tashkent_som_sales":
+        return _tash_toggle_divider()
     # KZ-филиалы и франшизы: продажи в KZT -> USD только когда переключатель = USD
     return _kzt_toggle_divider()
 
@@ -748,7 +759,7 @@ def _derived_formulas(row: int) -> Dict[str, str]:
 #     Франшиза VitalyLife Актау
 #     Франшиза Vitally Life Кокшетау
 #     Франшиза Темиртау
-#     Франшиза Proff Dental   (ташкентская логика конвертации: платники /$H$1, продажи не делятся)
+#     Франшиза Proff Dental   (ташкентская логика: платники И продажи в сомах -> /$H$1)
 LABEL_TO_SVODKA_RAW: Dict[str, str] = {
     # ---- Филиалы ----
     "Филиал Nouvera Астана": "Сводка Nouvera Астана",
@@ -778,7 +789,7 @@ LABEL_TO_SVODKA: Dict[str, str] = {_norm_label_key(k): v for k, v in LABEL_TO_SV
 PAYERS_KIND_BY_SHEET = {
     "Сводка Опатра Ташкент": "tashkent",
     "Сводка Опатра Ташкент Айви": "tashkent",
-    "Сводка  Стоматология Proff Dental": "tashkent",
+    "Сводка  Стоматология Proff Dental": "tashkent_som_sales",
     "Сводка CocoAge": "dubai",
     # остальные kz
 }
