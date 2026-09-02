@@ -7,15 +7,15 @@ on:
       spreadsheet_id:
         description: "ID Google-таблицы"
         required: true
-        default: "1mz9HXyqfcXxq6BXWO_-rYrb7eZ4qLqjm15pWFbYJ4bg"
+        default: "1z7MBE_WfvefVwzyIqdp-bh7zDQDf_ijdB2O518KlEm8"
       work_rows:
         description: "Строки дат (30 дней = 4:33, 28 = 4:31, 31 = 4:34)"
         required: true
-        default: "4:34"
+        default: "4:33"
       apply:
         description: "Реально записать формулы? (false = сухой прогон)"
         required: true
-        default: "false"
+        default: "true"
   # Расписание (UTC). Пример: каждый день в 06:00 UTC. Раскомментируй при необходимости.
   # schedule:
   #   - cron: "0 6 * * *"
