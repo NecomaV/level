@@ -756,6 +756,7 @@ def _derived_formulas(row: int) -> Dict[str, str]:
 #     Франшиза VitalyLife Алматы
 #     Франшиза VitalyLife Актау
 #     Франшиза Vitally Life Кокшетау
+#     Франшиза Vitally Life Тараз
 #     Франшиза Темиртау
 #     Франшиза Proff Dental   (ташкентская логика: платники И продажи в сомах -> /$H$1)
 #
@@ -781,6 +782,7 @@ LABEL_TO_SVODKA_RAW: Dict[str, str] = {
     "Франшиза VitalyLife Алматы": "Сводка Vitally Life Алматы Вадим",
     "Франшиза VitalyLife Актау": "Сводка Vitally Life Актау",
     "Франшиза Vitally Life Кокшетау": "Сводка Vitally Life Кокшетау",
+    "Франшиза Vitally Life Тараз": "Сводка Vitally Life Тараз",
     "Франшиза Темиртау": "Сводка Vitally Life Темиртау",
     "Франшиза Proff Dental": "Сводка  Стоматология Proff Dental",
 }
