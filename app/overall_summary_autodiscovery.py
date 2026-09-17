@@ -786,6 +786,7 @@ LABEL_TO_SVODKA_RAW: Dict[str, str] = {
     "Франшиза Vitally Life Тараз": "Сводка Vitally Life Тараз",
     "Франшиза Темиртау": "Сводка Vitally Life Темиртау",
     "Франшиза Аурум Астана": "Сводка Аурум Астана",
+    "Франшиза Dream Team Dental":"Сводка Dream Team Dental",
     "Франшиза Proff Dental": "Сводка  Стоматология Proff Dental",
 }
 
