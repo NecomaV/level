@@ -7,11 +7,11 @@ on:
       spreadsheet_id:
         description: "ID Google-таблицы"
         required: true
-        default: "1z7MBE_WfvefVwzyIqdp-bh7zDQDf_ijdB2O518KlEm8"
+        default: "1C2pkg02z4eLqpcuUQ9lcZqZ4ajIB2_VA-tkhA0wAYGU"
       work_rows:
         description: "Строки дат (30 дней = 4:33, 28 = 4:31, 31 = 4:34)"
         required: true
-        default: "4:33"
+        default: "4:34"
       apply:
         description: "Реально записать формулы? (false = сухой прогон)"
         required: true
