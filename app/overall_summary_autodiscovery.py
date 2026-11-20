@@ -38,6 +38,11 @@ L  Продажи $
     - tashkent_som_sales -> делим на $H$1 (UZS) ТОЛЬКО когда $G$1="USD"  (продажи в сомах, напр. Proff Dental, Kedma Ташкент)
     - dubai            -> делим на $E$1 (AED)   всегда
 
+ДУБАЙ (Сводка CocoAge) — 4 денежных блока, суммируются попарно:
+  K = AZ:BA "Сумма платных процедур"          + BF:BG "... Вторичка"
+  L = BC:BD "Продажи первичка"                + BI:BJ "... Вторичка"
+  Заголовки на листе — ВПР к листу "Переводы" (RU/EN), токены ловят оба языка.
+
 СЕКЦИИ листа Overall (метки в B повторяются между секциями!):
   - "Филиал ..."  таблица    -> своя строка "Итог:"
   - "Франшиза ..." таблица    -> своя строка "Итог:"
@@ -296,6 +301,15 @@ PAYERS_TOKENS = {
     "возвращенные средства",
     "возвращённые",
     "returned", "paid", "payers",
+    # CocoAge (Дубай): заголовки переводятся через лист "Переводы" (ВПР по ключу,
+    # язык = $A$100). Ключи paid_procedures_sum / paid_procedures_sum_secondary:
+    #   RU "Сумма платных процедур" / "Сумма платных процедур Вторичка"
+    #   EN "Total of paid procedures" / "Total of paid procedures in secondary"
+    # Оба блока (первичка + вторичка) = возврат средств, суммируются в K.
+    "сумма платных процедур",
+    "платных процедур",
+    "total of paid procedures",
+    "paid procedures",
 }
 
 SALES_TOKENS = {
@@ -305,6 +319,11 @@ SALES_TOKENS = {
     "primary",
     "initial sales",
     "sales from primary",
+    # CocoAge (Дубай): ключи initial_sales / initial_sales_secondary листа "Переводы":
+    #   RU "Продажи первичка" / "Продажи первичка Вторичка"
+    #   EN "Sales from Primary procedure" / "Sales from primary procedure in Secondary"
+    # Оба блока = продажи, суммируются в L.
+    "sales from primary procedure",
 }
 
 COLD_TOKENS = {"холодная", "холодная база", "cold numbers", "cold"}
@@ -312,7 +331,8 @@ COLD_TOKENS = {"холодная", "холодная база", "cold numbers", 
 # Блоки, которые нужно полностью исключать из сводки по заголовку блока
 # (не учитываются ни в одной метрике).
 #   "dubai target" — на листе "Сводка CocoAge": лиды без бюджета, в общую сводку не идёт.
-EXCLUDE_BLOCK_TITLE_TOKENS = {"dubai target"}
+#   "таргет дубай" — то же название в русском режиме листа (ключ dif_base в "Переводы").
+EXCLUDE_BLOCK_TITLE_TOKENS = {"dubai target", "таргет дубай"}
 
 _WORD = r"a-z0-9а-я"
 
